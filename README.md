@@ -1,8 +1,7 @@
 # Mr Clean
 
 A macOS menu bar app that sweeps your Desktop into a timestamped folder in iCloud Drive, so
-your Desktop stays empty but nothing is ever lost. A modern rebuild of the old
-[Mr Tidy](http://getmrtidy.com/), which stopped at El Capitan.
+your Desktop stays empty but nothing is ever lost.
 
 Click **Archive Desktop** in the menu bar and everything visible on your Desktop moves to:
 
@@ -12,18 +11,51 @@ Click **Archive Desktop** in the menu bar and everything visible on your Desktop
 
 (that's `iCloud Drive/Previous Desktops/` in Finder)
 
-## Install
+## This is a clone of Mr Tidy
+
+There used to be a small Mac utility called **Mr Tidy** ([getmrtidy.com](http://getmrtidy.com/),
+now offline) with exactly one good idea: rather than making you file your Desktop clutter, it
+swept the whole thing into a folder stamped with the date and time. Your Desktop was empty a
+second later, and every previous Desktop was still sitting there in order if you ever needed
+something back.
+
+Mr Tidy stopped working after OS X El Capitan and was never updated. Mr Clean is a from-scratch
+rebuild of that idea for current macOS, in Swift and SwiftUI, with two changes:
+
+- **Archives go to iCloud Drive by default**, so your previous Desktops sync across your Macs
+  instead of piling up on one disk.
+- **Archives can be restored** — pick one from the menu and its contents move back onto the
+  Desktop.
+
+No affiliation with the original Mr Tidy or its author; none of its code was used. This is a
+reimplementation of a behaviour, written because the original no longer runs.
+
+## Requirements
+
+- macOS 14 (Sonoma) or later
+- Xcode 15+ or the Command Line Tools, for the Swift compiler — check with `swift --version`
+
+## Build and install
 
 ```bash
+git clone https://github.com/hjhart/mr-clean.git
+cd mr-clean
 ./Scripts/build-app.sh --install
 ```
 
-That builds `dist/Mr Clean.app`, copies it to `/Applications`, and launches it. Drop the
-`--install` flag to just build into `dist/`.
+`build-app.sh` compiles a release build, assembles `dist/Mr Clean.app` (Info.plist, generated
+icon, ad-hoc code signature), and with `--install` copies it to `/Applications` and launches it.
+Drop `--install` to build into `dist/` only and move the app yourself.
+
+Because the app is ad-hoc signed rather than notarized, the first launch from `/Applications`
+may need a right-click › **Open** to get past Gatekeeper.
 
 The first archive triggers a macOS permission prompt for Desktop access — allow it, or the
 move fails with "operation not permitted". If you miss the prompt, grant it under
 **System Settings › Privacy & Security › Files and Folders › Mr Clean**.
+
+To uninstall: quit from the menu bar, then delete `/Applications/Mr Clean.app`. Your archives
+stay where they are.
 
 ## Menu
 
@@ -71,3 +103,7 @@ Layout:
 
 **Launch at login** uses `SMAppService`, which needs the app to live in `/Applications`.
 Toggle it from Settings after installing.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
