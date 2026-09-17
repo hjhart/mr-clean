@@ -4,13 +4,15 @@ public struct Archive: Identifiable, Hashable {
     public var url: URL
     public var date: Date
     public var itemCount: Int
+    public var machine: String?
 
     public var id: URL { url }
 
-    public init(url: URL, date: Date, itemCount: Int) {
+    public init(url: URL, date: Date, itemCount: Int, machine: String? = nil) {
         self.url = url
         self.date = date
         self.itemCount = itemCount
+        self.machine = machine
     }
 }
 
@@ -99,7 +101,8 @@ public struct DesktopArchiver {
             return ArchiveResult(archive: nil, moved: [], failures: failures)
         }
 
-        let archive = Archive(url: destination, date: date, itemCount: moved.count)
+        let archive = Archive(url: destination, date: date, itemCount: moved.count,
+                              machine: Paths.machine(fromArchiveFolderName: destination.lastPathComponent))
         return ArchiveResult(archive: archive, moved: moved, failures: failures)
     }
 
@@ -146,7 +149,8 @@ public struct DesktopArchiver {
                     includingPropertiesForKeys: nil,
                     options: [.skipsHiddenFiles]
                 ).count) ?? 0
-                return Archive(url: url, date: date, itemCount: count)
+                let machine = Paths.machine(fromArchiveFolderName: url.lastPathComponent)
+                return Archive(url: url, date: date, itemCount: count, machine: machine)
             }
             .sorted { $0.date > $1.date }
             .prefix(limit)

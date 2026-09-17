@@ -53,6 +53,10 @@ struct MenuContent: View {
     }
 
     private func label(for archive: Archive) -> String {
-        "\(AppModel.longDate(archive.date)) — \(archive.itemCount) item\(archive.itemCount == 1 ? "" : "s")"
+        let items = "\(archive.itemCount) item\(archive.itemCount == 1 ? "" : "s")"
+        if let machine = archive.machine {
+            return "\(AppModel.longDate(archive.date)) — \(machine) — \(items)"
+        }
+        return "\(AppModel.longDate(archive.date)) — \(items)"
     }
 }
